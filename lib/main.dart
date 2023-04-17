@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:in_chat/screens/auth/login_screen.dart';
+import 'package:in_chat/screens/splash_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.black),
         ),
       ),
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

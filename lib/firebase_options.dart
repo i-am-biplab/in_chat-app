@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '929379219500',
     projectId: 'in-chat-f038d',
     storageBucket: 'in-chat-f038d.appspot.com',
+    androidClientId: '929379219500-2knkjjc37qrjnuhn078j3ju1uelndcag.apps.googleusercontent.com',
     iosClientId: '929379219500-h5ikeo3dlftodq0uk0et66bv91bqc8li.apps.googleusercontent.com',
     iosBundleId: 'com.example.inChat',
   );

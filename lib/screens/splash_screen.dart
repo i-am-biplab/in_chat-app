@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:in_chat/api/apis.dart';
 import 'package:in_chat/main.dart';
 
 import 'package:in_chat/screens/auth/login_screen.dart';
+import 'package:in_chat/screens/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,14 +20,20 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 2000), () {
-      // exit from full-screen
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       // set status bar to transparent
       SystemChrome.setSystemUIOverlayStyle(
           const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+      // exit from full-screen
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+      if (APIs.fireauth.currentUser != null) {
+        log('\nUser: ${APIs.fireauth.currentUser}');
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+      }
     });
   }
 

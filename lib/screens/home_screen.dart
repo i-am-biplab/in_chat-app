@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:in_chat/api/apis.dart';
 import 'package:in_chat/models/chat_user.dart';
+import 'package:in_chat/screens/profile_screen.dart';
 import 'package:in_chat/widgets/chat_user_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,6 +20,12 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ChatUser> list = [];
 
   @override
+  void initState() {
+    super.initState();
+    APIs.selfInfo();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -26,21 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('In Chat'),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ProfileScreen(user: APIs.self)));
+              },
+              icon: const Icon(Icons.more_vert)),
         ],
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 5, bottom: 10),
         child: FloatingActionButton(
-          onPressed: () async {
-            await APIs.fireauth.signOut();
-            await GoogleSignIn().signOut();
-          },
+          onPressed: () async {},
           child: const Icon(Icons.add_comment),
         ),
       ),
       body: StreamBuilder(
-          stream: APIs.firestore.collection('users').snapshots(),
+          stream: APIs.getUsers(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               // data is loading

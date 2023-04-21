@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:in_chat/models/chat_user.dart';
@@ -9,23 +11,37 @@ class APIs {
   // to return current user details
   static User get user => fireauth.currentUser!;
 
+  // to return current userinfo details
+  static UserInfo get userInfo => user.providerData[0];
+
   // for accessing cloud firestore database
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  static late ChatUser self;
+
   // to check if user exists or not
   static Future<bool> userExists() async {
-    return (await firestore
-            .collection('users')
-            .doc(fireauth.currentUser!.uid)
-            .get())
-        .exists;
+    return (await firestore.collection('users').doc(user.uid).get()).exists;
+  }
+
+  // to get current user self info
+  static Future<void> selfInfo() async {
+    await firestore.collection('users').doc(user.uid).get().then((user) async {
+      if (user.exists) {
+        self = ChatUser.fromJson(user.data()!);
+        // log('User Self Data: $self');
+        log('User Self Data: ${user.data()}');
+      } else {
+        await createUser().then((value) => selfInfo());
+      }
+    });
   }
 
   // for creating a new user
   static Future<void> createUser() async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     final chatuser = ChatUser(
-        image: user.photoURL.toString(),
+        image: userInfo.photoURL.toString(),
         about: 'Hey There! I am using In Chat',
         name: user.displayName.toString(),
         createdAt: time,
@@ -38,5 +54,13 @@ class APIs {
         .collection('users')
         .doc(user.uid)
         .set(chatuser.toJson());
+  }
+
+  // for getting all users from firestore except the logged in one
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUsers() {
+    return firestore
+        .collection('users')
+        .where('id', isNotEqualTo: user.uid)
+        .snapshots();
   }
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:in_chat/models/chat_user.dart';
 
 class APIs {
@@ -16,6 +17,9 @@ class APIs {
 
   // for accessing cloud firestore database
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // for accessing firebase storage
+  static FirebaseStorage fstorage = FirebaseStorage.instance;
 
   static late ChatUser self;
 
@@ -62,5 +66,13 @@ class APIs {
         .collection('users')
         .where('id', isNotEqualTo: user.uid)
         .snapshots();
+  }
+
+  // to update user details
+  static Future<void> updateUserDetl() async {
+    await firestore.collection('users').doc(user.uid).update({
+      'name': self.name,
+      'about': self.about,
+    });
   }
 }

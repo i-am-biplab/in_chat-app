@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -73,6 +74,29 @@ class APIs {
     await firestore.collection('users').doc(user.uid).update({
       'name': self.name,
       'about': self.about,
+    });
+  }
+
+  // update profile picture of the user
+  static Future<void> updateProfilePic(File file) async {
+    // taking out image file extension
+    final ext = file.path.split('.').last;
+    log('Image extension: $ext');
+
+    // storing ref with path
+    final ref = fstorage.ref().child('profle_pics/${user.uid}.$ext');
+
+    // upload image
+    await ref
+        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
+        .then((p0) {
+      log('Data Transferred: ${p0.bytesTransferred / 1000} kB');
+    });
+
+    // update image url in firestore
+    self.image = await ref.getDownloadURL();
+    await firestore.collection('users').doc(user.uid).update({
+      'image': self.image,
     });
   }
 }

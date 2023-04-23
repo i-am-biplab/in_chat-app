@@ -99,4 +99,11 @@ class APIs {
       'image': self.image,
     });
   }
+
+  // *************** Chat Screen related APIs *************** //
+
+  // for getting all messages of a specific convo from firestore
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages() {
+    return firestore.collection('messages').snapshots();
+  }
 }

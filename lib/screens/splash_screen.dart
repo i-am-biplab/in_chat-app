@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // set status bar to transparent
       SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
+            statusBarColor: Colors.white,
             systemNavigationBarColor: Colors.white),
       );
       // exit from full-screen
